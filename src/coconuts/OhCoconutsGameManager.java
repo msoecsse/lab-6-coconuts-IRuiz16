@@ -1,7 +1,5 @@
 package coconuts;
 
-// https://stackoverflow.com/questions/42443148/how-to-correctly-separate-view-from-model-in-javafx
-
 import javafx.scene.layout.Pane;
 
 import java.util.Collection;

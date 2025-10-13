@@ -43,9 +43,17 @@ public class GameController {
     @FXML
     public void onKeyPressed(KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.RIGHT && !theGame.done()) {
+            //just move the crab
             theGame.getCrab().crawl(10);
+            //if enter is pressed shoot laser
+            if(keyPressed(keyEvent)){
+                theGame.getTheLaser().step();
+            }
         } else if (keyEvent.getCode() == KeyCode.LEFT && !theGame.done()) {
             theGame.getCrab().crawl(-10);
+            if(keyPressed(keyEvent)){
+                theGame.getTheLaser().step();
+            }
         } else if (keyEvent.getCode() == KeyCode.SPACE) {
             if (!started) {
                 coconutTimeline.play();
@@ -56,4 +64,10 @@ public class GameController {
             }
         }
     }
+
+    private boolean keyPressed(KeyEvent keyEvent){
+        return keyEvent.getCode() == KeyCode.UP;
+    }
+
+
 }

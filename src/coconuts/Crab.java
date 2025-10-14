@@ -30,4 +30,11 @@ public class Crab extends HittableIslandObject {
         }
         display();
     }
+
+    @Override
+    public void onHit(IslandObject source, HittableIslandObject obj) {
+        if(obj == this){
+            //TODO
+        }
+    }
 }

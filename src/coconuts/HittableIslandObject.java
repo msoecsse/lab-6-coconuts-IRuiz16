@@ -12,4 +12,6 @@ public abstract class HittableIslandObject extends IslandObject {
     public boolean isHittable() {
         return true;
     }
+
+    public abstract void onHit(IslandObject source, HittableIslandObject obj);
 }

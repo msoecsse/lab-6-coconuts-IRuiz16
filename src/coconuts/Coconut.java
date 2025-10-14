@@ -16,4 +16,11 @@ public class Coconut extends HittableIslandObject {
     public void step() {
         y += 5;
     }
+
+    @Override
+    public void onHit(IslandObject source, HittableIslandObject obj) {
+        if(obj == this){
+            //TODO
+        }
+    }
 }

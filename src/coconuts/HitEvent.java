@@ -8,25 +8,25 @@ import java.util.ArrayList;
 // This is a domain class; do not introduce JavaFX or other GUI components here
 public class HitEvent {
     //List of observers - objects that do something when a hit happens.
-    private ArrayList<HittableIslandObject> observers = new ArrayList<>();
+    private static ArrayList<HittableIslandObject> observers = new ArrayList<>();
 
     //Register or unregister the observers.
-    public void addObserver(HittableIslandObject observer){
+    public static void addObserver(HittableIslandObject observer){
         observers.add(observer);
     }
 
-    public void removeObserver(HittableIslandObject observer){
+    public static void removeObserver(HittableIslandObject observer){
         observers.remove(observer);
     }
 
     //Method to notify all observers
-    private void notifyAllObservers(IslandObject source, HittableIslandObject target){
+    private static void notifyAllObservers(IslandObject source, HittableIslandObject target){
         for(HittableIslandObject o : observers){
             o.onHit(source, target);
         }
     }
 
-    public void hit(IslandObject source, HittableIslandObject target){
+    public static void hit(IslandObject source, HittableIslandObject target){
         //The source doesn't have to be hittable because like the laser beam can hit other things but can't be hit itself.
         notifyAllObservers(source, target);
         //Separate methods to allow for extra code if needed.

@@ -19,6 +19,7 @@ public class OhCoconutsGameManager {
     /* game play */
     private int coconutsInFlight = 0;
     private int gameTick = 0;
+    public boolean gameEnd = false;
 
     public OhCoconutsGameManager(int height, int width, Pane gamePane) {
         this.height = height;
@@ -41,6 +42,7 @@ public class OhCoconutsGameManager {
         if (object.isHittable()) {
             HittableIslandObject asHittable = (HittableIslandObject) object;
             hittableIslandSubjects.add(asHittable);
+            HitEvent.addObserver((HittableIslandObject) object);
         }
     }
 
@@ -57,22 +59,26 @@ public class OhCoconutsGameManager {
     }
 
     public void tryDropCoconut() {
-        if (gameTick % DROP_INTERVAL == 0 && theCrab != null) {
-            coconutsInFlight += 1;
-            Coconut c = new Coconut(this, (int) (Math.random() * width));
-            registerObject(c);
-            gamePane.getChildren().add(c.getImageView());
+        if(!gameEnd) {
+            if (gameTick % DROP_INTERVAL == 0 && theCrab != null) {
+                coconutsInFlight += 1;
+                Coconut c = new Coconut(this, (int) (Math.random() * width));
+                registerObject(c);
+                gamePane.getChildren().add(c.getImageView());
+            }
+            gameTick++;
         }
-        gameTick++;
     }
 
     public void shootLaser(){
-        if(gameTick % DROP_INTERVAL == 0 && theCrab != null) {
-            LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
-            registerObject(laserBeam);
-            gamePane.getChildren().add(laserBeam.getImageView());
+        if(!gameEnd) {
+            if (gameTick % DROP_INTERVAL == 0 && theCrab != null) {
+                LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
+                registerObject(laserBeam);
+                gamePane.getChildren().add(laserBeam.getImageView());
+            }
+            gameTick++;
         }
-        gameTick++;
     }
 
 
@@ -81,7 +87,10 @@ public class OhCoconutsGameManager {
     }
 
     public void killCrab() {
-        theCrab = null;
+        gamePane.getChildren().remove(theCrab.getImageView());
+        scheduleForDeletion(theCrab);
+        gameEnd = true;
+
     }
 
     public void advanceOneTick() {
@@ -97,8 +106,7 @@ public class OhCoconutsGameManager {
             for (HittableIslandObject hittableObject : hittableIslandSubjects) {
                 if (thisObj.canHit(hittableObject) && thisObj.isTouching(hittableObject)) {
                     // TODO: add code here to process the hit
-                    hittableObject.onHit(thisObj, hittableObject);
-                    System.out.println("TEST");
+                    HitEvent.hit(thisObj, hittableObject);
 
                     scheduledForRemoval.add(hittableObject);
                     gamePane.getChildren().remove(hittableObject.getImageView());
@@ -110,6 +118,7 @@ public class OhCoconutsGameManager {
             allObjects.remove(thisObj);
             if (thisObj instanceof HittableIslandObject) {
                 hittableIslandSubjects.remove((HittableIslandObject) thisObj);
+                HitEvent.removeObserver((HittableIslandObject) thisObj);
             }
         }
         scheduledForRemoval.clear();

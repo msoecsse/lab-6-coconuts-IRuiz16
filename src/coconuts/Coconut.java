@@ -19,8 +19,14 @@ public class Coconut extends HittableIslandObject {
 
     @Override
     public void onHit(IslandObject source, HittableIslandObject obj) {
-        if(obj == this){
-            //TODO
+        //obj will always be the coconut
+
+        if (source instanceof Beach){
+
+        } else if (source instanceof LaserBeam){
+
+        } else if (source instanceof Crab){
+            containingGame.killCrab();
         }
     }
 }

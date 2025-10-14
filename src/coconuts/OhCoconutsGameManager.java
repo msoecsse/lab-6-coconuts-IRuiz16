@@ -16,7 +16,6 @@ public class OhCoconutsGameManager {
     private Pane gamePane;
     private Crab theCrab;
     private Beach theBeach;
-    private LaserBeam theLaser;
     /* game play */
     private int coconutsInFlight = 0;
     private int gameTick = 0;
@@ -29,10 +28,7 @@ public class OhCoconutsGameManager {
         this.theCrab = new Crab(this, height, width);
         registerObject(theCrab);
 
-        this.theLaser = new LaserBeam(this, height, width);
-        registerObject(theLaser);
-
-        gamePane.getChildren().addAll(theCrab.getImageView(), theLaser.getImageView());
+        gamePane.getChildren().addAll(theCrab.getImageView());
 
         this.theBeach = new Beach(this, height, width);
         registerObject(theBeach);
@@ -70,16 +66,22 @@ public class OhCoconutsGameManager {
         gameTick++;
     }
 
+    public void shootLaser(){
+        if(gameTick % DROP_INTERVAL == 0 && theCrab != null) {
+            LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
+            registerObject(laserBeam);
+            gamePane.getChildren().add(laserBeam.getImageView());
+        }
+        gameTick++;
+    }
+
+
     public Crab getCrab() {
         return theCrab;
     }
 
     public void killCrab() {
         theCrab = null;
-    }
-
-    public LaserBeam getTheLaser(){
-        return theLaser;
     }
 
     public void advanceOneTick() {

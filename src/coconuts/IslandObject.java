@@ -54,11 +54,19 @@ public abstract class IslandObject {
     }
 
     public boolean canHit(IslandObject other) {
-        return false;
+        if(imageView != null && other.imageView != null) {
+            return other.isHittable() && !this.imageView.equals(other.imageView);
+        } else{
+            return other.isHittable();
+        }
     }
 
     public boolean isTouching(IslandObject other) {
-        return false;
+        int topX = x + width;
+        int topY = y + width;
+//        int otherX = other.x + width;
+//        int otherY = other.y + width;
+        return other.x >= x && other.x <= topX && other.y >= y && other.y <= topY;
     }
 
     public abstract void step();

@@ -18,6 +18,6 @@ public class LaserBeam extends IslandObject {
 
     @Override
     public void step() {
-        y -= 10;
+        y -= 5;
     }
 }

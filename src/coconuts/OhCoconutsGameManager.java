@@ -20,6 +20,9 @@ public class OhCoconutsGameManager {
     private int coconutsInFlight = 0;
     private int gameTick = 0;
 
+    private int laserGameTick = 0;
+
+
     public OhCoconutsGameManager(int height, int width, Pane gamePane) {
         this.height = height;
         this.width = width;
@@ -67,14 +70,14 @@ public class OhCoconutsGameManager {
     }
 
     public void shootLaser(){
-        if(gameTick % DROP_INTERVAL == 0 && theCrab != null) {
-            LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
+        if(laserGameTick % DROP_INTERVAL == 0 && theCrab != null) {
+            LaserBeam laserBeam = new LaserBeam(this, theCrab.x, theCrab.y);
+            System.out.println(theCrab.y == laserBeam.y);
             registerObject(laserBeam);
             gamePane.getChildren().add(laserBeam.getImageView());
         }
-        gameTick++;
+        laserGameTick++;
     }
-
 
     public Crab getCrab() {
         return theCrab;
@@ -98,7 +101,6 @@ public class OhCoconutsGameManager {
                 if (thisObj.canHit(hittableObject) && thisObj.isTouching(hittableObject)) {
                     // TODO: add code here to process the hit
                     hittableObject.onHit(thisObj, hittableObject);
-                    System.out.println("TEST");
 
                     scheduledForRemoval.add(hittableObject);
                     gamePane.getChildren().remove(hittableObject.getImageView());

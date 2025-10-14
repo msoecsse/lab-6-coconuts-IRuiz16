@@ -22,7 +22,7 @@ public class Coconut extends HittableIslandObject {
         //obj will always be the coconut
 
         if (source instanceof Beach){
-
+            containingGame.playSound("coconut");
         } else if (source instanceof LaserBeam){
 
         } else if (source instanceof Crab){

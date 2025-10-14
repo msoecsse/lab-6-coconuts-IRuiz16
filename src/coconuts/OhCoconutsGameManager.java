@@ -1,9 +1,16 @@
 package coconuts;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
+import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 // This class manages the game, including tracking all island objects and detecting when they hit
 public class OhCoconutsGameManager {
@@ -22,7 +29,7 @@ public class OhCoconutsGameManager {
     public boolean gameEnd = false;
 
     private int laserGameTick = 0;
-
+    private final Map<String, MediaPlayer> sounds;
 
     public OhCoconutsGameManager(int height, int width, Pane gamePane) {
         this.height = height;
@@ -38,6 +45,11 @@ public class OhCoconutsGameManager {
         registerObject(theBeach);
         if (theBeach.getImageView() != null)
             System.out.println("Unexpected image view for beach");
+
+        sounds = new HashMap<>();
+        sounds.put("laser", new MediaPlayer(new Media(new File("soundEffects/laser.mp3").toURI().toString())));
+        sounds.put("lose", new MediaPlayer(new Media(new File("soundEffects/losing.mp3").toURI().toString())));
+        sounds.put("coconut", new MediaPlayer(new Media(new File("soundEffects/coconutHit.mp3").toURI().toString())));
     }
 
     private void registerObject(IslandObject object) {
@@ -76,6 +88,7 @@ public class OhCoconutsGameManager {
     public void shootLaser(){
         if(!gameEnd) {
             if (gameTick % DROP_INTERVAL == 0 && theCrab != null) {
+                playSound("laser"); //TODO: work?
                 LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
                 registerObject(laserBeam);
                 gamePane.getChildren().add(laserBeam.getImageView());
@@ -93,6 +106,10 @@ public class OhCoconutsGameManager {
         scheduleForDeletion(theCrab);
         gameEnd = true;
 
+        //Little delay to play sound afterwards
+        PauseTransition delay = new PauseTransition(Duration.seconds(1.5)); // delay = 1.5 seconds
+        delay.setOnFinished(e -> playSound("lose"));
+        delay.play();
     }
 
     public void advanceOneTick() {
@@ -132,5 +149,12 @@ public class OhCoconutsGameManager {
 
     public boolean done() {
         return coconutsInFlight == 0 && gameTick >= MAX_TIME;
+    }
+
+    protected void playSound(String typeOfSound){
+        //typeOfSound keys: laser, lose, coconut
+        MediaPlayer mediaPlayer = sounds.get(typeOfSound.toLowerCase());
+        mediaPlayer.stop(); //To reset mediaPlayer!
+        mediaPlayer.play();
     }
 }

@@ -1,6 +1,7 @@
 package coconuts;
 
 import javafx.animation.PauseTransition;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -27,14 +28,19 @@ public class OhCoconutsGameManager {
     private int coconutsInFlight = 0;
     private int gameTick = 0;
     public boolean gameEnd = false;
+    private Label beachScore;
+    private Label crabScore;
 
     private int laserGameTick = 0;
     private final Map<String, MediaPlayer> sounds;
 
-    public OhCoconutsGameManager(int height, int width, Pane gamePane) {
+    public OhCoconutsGameManager(int height, int width, Pane gamePane, Label beachScore, Label crabScore) {
         this.height = height;
         this.width = width;
         this.gamePane = gamePane;
+
+        this.beachScore = beachScore;
+        this.crabScore = crabScore;
 
         this.theCrab = new Crab(this, height, width);
         registerObject(theCrab);
@@ -126,6 +132,14 @@ public class OhCoconutsGameManager {
                 if (thisObj.canHit(hittableObject) && thisObj.isTouching(hittableObject)) {
                     // TODO: add code here to process the hit
                     hittableObject.onHit(thisObj, hittableObject);
+
+                    if(thisObj instanceof Beach){
+                        beachScore.setText(String.valueOf(Integer.parseInt(
+                                beachScore.getText()) + 1));
+                    } else if(thisObj instanceof LaserBeam){
+                        crabScore.setText(String.valueOf(Integer.parseInt(
+                                crabScore.getText()) + 1));
+                    }
 
                     scheduledForRemoval.add(hittableObject);
                     gamePane.getChildren().remove(hittableObject.getImageView());

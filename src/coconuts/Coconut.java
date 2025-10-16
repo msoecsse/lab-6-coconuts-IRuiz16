@@ -1,5 +1,6 @@
 package coconuts;
 
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 
 // Represents the falling object that can kill crabs. If hit by a laser, the coconut disappears
@@ -18,13 +19,16 @@ public class Coconut extends HittableIslandObject {
     }
 
     @Override
-    public void onHit(IslandObject source, HittableIslandObject obj) {
+    public void onHit(IslandObject source, HittableIslandObject obj, Label beachScore, Label crabScore) {
         //obj will always be the coconut
 
         if (source instanceof Beach){
             containingGame.playSound("coconut");
+            beachScore.setText(String.valueOf(Integer.parseInt(
+                    beachScore.getText()) + 1));
         } else if (source instanceof LaserBeam){
-
+            crabScore.setText(String.valueOf(Integer.parseInt(
+                    crabScore.getText()) + 1));
         } else if (source instanceof Crab){
             containingGame.killCrab();
         }

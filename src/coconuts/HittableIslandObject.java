@@ -1,5 +1,6 @@
 package coconuts;
 
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 
 // Represents island objects which can be hit
@@ -13,5 +14,5 @@ public abstract class HittableIslandObject extends IslandObject {
         return true;
     }
 
-    public abstract void onHit(IslandObject source, HittableIslandObject obj);
+    public abstract void onHit(IslandObject source, HittableIslandObject obj, Label beachScore, Label crabScore);
 }

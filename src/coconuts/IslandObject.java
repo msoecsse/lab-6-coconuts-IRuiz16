@@ -64,8 +64,6 @@ public abstract class IslandObject {
     public boolean isTouching(IslandObject other) {
         int topX = x + width;
         int topY = y + width;
-//        int otherX = other.x + width;
-//        int otherY = other.y + width;
         return other.x >= x && other.x <= topX && other.y >= y && other.y <= topY;
     }
 

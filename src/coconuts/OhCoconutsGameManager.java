@@ -94,7 +94,7 @@ public class OhCoconutsGameManager {
     public void shootLaser(){
         if(!gameEnd) {
             if (gameTick % DROP_INTERVAL == 0 && theCrab != null) {
-                playSound("laser"); //TODO: work?
+                playSound("laser");
                 LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
                 registerObject(laserBeam);
                 gamePane.getChildren().add(laserBeam.getImageView());
@@ -130,16 +130,13 @@ public class OhCoconutsGameManager {
         for (IslandObject thisObj : allObjects) {
             for (HittableIslandObject hittableObject : hittableIslandSubjects) {
                 if (thisObj.canHit(hittableObject) && thisObj.isTouching(hittableObject)) {
-                    // TODO: add code here to process the hit
-                    hittableObject.onHit(thisObj, hittableObject);
+                    hittableObject.onHit(thisObj, hittableObject, beachScore, crabScore);
 
-                    if(thisObj instanceof Beach){
-                        beachScore.setText(String.valueOf(Integer.parseInt(
-                                beachScore.getText()) + 1));
-                    } else if(thisObj instanceof LaserBeam){
-                        crabScore.setText(String.valueOf(Integer.parseInt(
-                                crabScore.getText()) + 1));
-                    }
+//                    if(thisObj instanceof Beach){
+//
+//                    } else if(thisObj instanceof LaserBeam){
+//
+//                    }
 
                     scheduledForRemoval.add(hittableObject);
                     gamePane.getChildren().remove(hittableObject.getImageView());

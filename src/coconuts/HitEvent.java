@@ -1,5 +1,7 @@
 package coconuts;
 
+import javafx.scene.control.Label;
+
 import java.util.ArrayList;
 
 // An abstraction of all objects that can be hit by another object
@@ -20,15 +22,15 @@ public class HitEvent {
     }
 
     //Method to notify all observers
-    private static void notifyAllObservers(IslandObject source, HittableIslandObject target){
+    private static void notifyAllObservers(IslandObject source, HittableIslandObject target, Label beachScore, Label crabScore){
         for(HittableIslandObject o : observers){
-            o.onHit(source, target);
+            o.onHit(source, target, beachScore, crabScore);
         }
     }
 
-    public static void hit(IslandObject source, HittableIslandObject target){
+    public static void hit(IslandObject source, HittableIslandObject target, Label beachScore, Label crabScore){
         //The source doesn't have to be hittable because like the laser beam can hit other things but can't be hit itself.
-        notifyAllObservers(source, target);
+        notifyAllObservers(source, target, beachScore, crabScore);
         //Separate methods to allow for extra code if needed.
     }
 }

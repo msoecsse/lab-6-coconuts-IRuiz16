@@ -31,7 +31,6 @@ public class OhCoconutsGameManager {
     private Label beachScore;
     private Label crabScore;
 
-    private int laserGameTick = 0;
     private final Map<String, MediaPlayer> sounds;
 
     public OhCoconutsGameManager(int height, int width, Pane gamePane, Label beachScore, Label crabScore) {
@@ -93,13 +92,12 @@ public class OhCoconutsGameManager {
 
     public void shootLaser(){
         if(!gameEnd) {
-            if (gameTick % DROP_INTERVAL == 0 && theCrab != null) {
+            if (theCrab != null) {
                 playSound("laser");
-                LaserBeam laserBeam = new LaserBeam(this, getCrab().x, getCrab().y);
+                LaserBeam laserBeam = new LaserBeam(this, theCrab.y, theCrab.x);
                 registerObject(laserBeam);
                 gamePane.getChildren().add(laserBeam.getImageView());
             }
-            gameTick++;
         }
     }
 
@@ -112,7 +110,7 @@ public class OhCoconutsGameManager {
         scheduleForDeletion(theCrab);
         gameEnd = true;
 
-        //Little delay to play sound afterwards
+        //Little delay to play sound after wards
         PauseTransition delay = new PauseTransition(Duration.seconds(1.5)); // delay = 1.5 seconds
         delay.setOnFinished(e -> playSound("lose"));
         delay.play();
@@ -123,27 +121,18 @@ public class OhCoconutsGameManager {
             o.step();
             o.display();
         }
-        // see if objects hit; the hit itself is something you will add
-        // you can't change the lists while processing them, so collect
-        //   items to be removed in the first pass and remove them later
+
         scheduledForRemoval.clear();
         for (IslandObject thisObj : allObjects) {
             for (HittableIslandObject hittableObject : hittableIslandSubjects) {
                 if (thisObj.canHit(hittableObject) && thisObj.isTouching(hittableObject)) {
                     hittableObject.onHit(thisObj, hittableObject, beachScore, crabScore);
 
-//                    if(thisObj instanceof Beach){
-//
-//                    } else if(thisObj instanceof LaserBeam){
-//
-//                    }
-
                     scheduledForRemoval.add(hittableObject);
                     gamePane.getChildren().remove(hittableObject.getImageView());
                 }
             }
         }
-        // actually remove the objects as needed
         for (IslandObject thisObj : scheduledForRemoval) {
             allObjects.remove(thisObj);
             if (thisObj instanceof HittableIslandObject) {

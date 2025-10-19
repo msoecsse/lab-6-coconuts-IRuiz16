@@ -9,8 +9,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-import java.sql.Time;
-
 // JavaFX Controller class for the game - generally, JavaFX elements (other than Image) should be here
 public class GameController {
 
@@ -19,7 +17,6 @@ public class GameController {
      */
     private static final double MILLISECONDS_PER_STEP = 1000.0 / 30;
     private Timeline coconutTimeline;
-    private Timeline laserTimeline;
     private boolean started = false;
 
     @FXML
@@ -47,14 +44,6 @@ public class GameController {
                 coconutTimeline.pause();
         }));
 
-        laserTimeline = new Timeline(new KeyFrame(Duration.millis(MILLISECONDS_PER_STEP), (e) -> {
-            theGame.shootLaser();
-            theGame.advanceOneTick();
-            if(theGame.done()){
-                laserTimeline.pause();
-            }
-        }));
-
         coconutTimeline.setCycleCount(Timeline.INDEFINITE);
     }
 
@@ -68,7 +57,8 @@ public class GameController {
             theGame.getCrab().crawl(-10);
 
         } else if(keyEvent.getCode() == KeyCode.UP){
-            laserTimeline.play();
+            theGame.shootLaser();
+            theGame.advanceOneTick();
 
         } else if (keyEvent.getCode() == KeyCode.SPACE) {
             if (!started) {
@@ -80,6 +70,4 @@ public class GameController {
             }
         }
     }
-
-
 }

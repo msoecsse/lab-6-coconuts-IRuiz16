@@ -1,13 +1,16 @@
 package coconuts;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
+
+import java.util.Optional;
 
 // JavaFX Controller class for the game - generally, JavaFX elements (other than Image) should be here
 public class GameController {
@@ -18,6 +21,7 @@ public class GameController {
     private static final double MILLISECONDS_PER_STEP = 1000.0 / 30;
     private Timeline coconutTimeline;
     private boolean started = false;
+    private int highScore = 0;
 
     @FXML
     private Pane gamePane;
@@ -40,11 +44,53 @@ public class GameController {
         coconutTimeline = new Timeline(new KeyFrame(Duration.millis(MILLISECONDS_PER_STEP), (e) -> {
             theGame.tryDropCoconut();
             theGame.advanceOneTick();
-            if (theGame.done())
+            if (theGame.done() || theGame.gameEnd) {
                 coconutTimeline.pause();
+                Platform.runLater(this::showEnd);
+            }
         }));
 
         coconutTimeline.setCycleCount(Timeline.INDEFINITE);
+    }
+
+    public void playAgain(){
+        gamePane.getChildren().clear();
+        theGame = new OhCoconutsGameManager((int) (gamePane.getPrefHeight() - theBeach.getPrefHeight()),
+                (int) (gamePane.getPrefWidth()), gamePane, beachScore, crabScore);
+
+        // Reset scores
+        beachScore.setText("0");
+        crabScore.setText("0");
+
+        // Restart timeline
+        coconutTimeline.playFromStart();
+    }
+
+    public void showEnd(){
+        int score = Integer.parseInt(crabScore.getText());
+        if(score > highScore){
+            highScore = score;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Game Over");
+        alert.setHeaderText("Game Over!");
+        alert.setContentText("Score: " + score +"\nHigh Score: " + highScore);
+        alert.initOwner(gamePane.getScene().getWindow());
+
+
+        ButtonType yes = new ButtonType("Play Again");
+        ButtonType no = new ButtonType("Quit");
+
+        alert.getButtonTypes().setAll(yes, no);
+
+        Optional<ButtonType> choice = alert.showAndWait();
+
+        if(choice.isPresent() && choice.get() == yes){
+            playAgain();
+        } else{
+            Platform.exit();
+        }
     }
 
     @FXML

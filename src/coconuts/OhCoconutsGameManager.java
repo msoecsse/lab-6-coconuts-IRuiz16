@@ -1,6 +1,9 @@
 package coconuts;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -8,10 +11,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 // This class manages the game, including tracking all island objects and detecting when they hit
 public class OhCoconutsGameManager {

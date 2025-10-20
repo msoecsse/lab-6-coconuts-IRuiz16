@@ -111,9 +111,10 @@ public class OhCoconutsGameManager {
         gameEnd = true;
 
         //Little delay to play sound after wards
-        PauseTransition delay = new PauseTransition(Duration.seconds(1.5)); // delay = 1.5 seconds
-        delay.setOnFinished(e -> playSound("lose"));
-        delay.play();
+        playSound("lose");
+//        PauseTransition delay = new PauseTransition(Duration.seconds(1.5)); // delay = 1.5 seconds
+//        delay.setOnFinished(e -> playSound("lose"));
+//        delay.play();
     }
 
     public void advanceOneTick() {

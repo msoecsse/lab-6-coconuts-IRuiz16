@@ -62,9 +62,15 @@ public abstract class IslandObject {
     }
 
     public boolean isTouching(IslandObject other) {
-        int topX = x + width;
-        int topY = y + width;
-        return other.x >= x && other.x <= topX && other.y >= y && other.y <= topY;
+//        int topX = x + width;
+//        int topY = y + width;
+//        int otherTopX = other.x + other.width;
+//        int otherTopY = other.y + other.width;
+//        return other.x >= x && other.x <= topX && other.y >= y && other.y <= topY;
+        return ((other.x + (other.width / 2) >= x && other.x + (other.width / 2) <= x + (width / 2)) ||
+                (other.x >= x && other.x <= (x + width / 2))) &&
+                ((other.y + (other.width / 3) >= y && other.y + (other.width / 3) <= y + (width / 3)) ||
+                        (other.y >= y && other.y <= y + (width / 3)));
     }
 
     public abstract void step();
